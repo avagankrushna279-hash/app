@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Receptionist">
+<title>AI Receptionist</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ac:#2B4EFF}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0A0A0C}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+a{color:inherit;text-decoration:none}
+button,input{font-family:inherit}
+:focus-visible{outline:2px solid #9DB8FF;outline-offset:2px}
+#app{position:relative;max-width:430px;margin:0 auto;height:100vh;height:100dvh;overflow:hidden}
+.scr{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:calc(20px + env(safe-area-inset-top)) 24px 130px}
+.scr.fx{overflow:hidden;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.d{background-color:#0A0A0C;background-image:linear-gradient(#17171B 1px,transparent 1px),linear-gradient(90deg,#17171B 1px,transparent 1px);background-size:28px 28px;color:#fff}
+.l{background:#F2F3F6;color:#0A0A0C}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.c{width:48px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;flex:none;padding:0;border:1px solid #2A2A30;background:#17171B;color:#fff;cursor:pointer;font-size:14px;font-weight:700}
+.l .c{border-color:#D9DBE1;background:#fff;color:#0A0A0C}
+.card{border-radius:26px;background:#17171B;border:1px solid #2A2A30;padding:16px}
+.l .card{background:#fff;border-color:#fff}
+.blk{background:#0A0A0C!important;color:#fff;border-color:#0A0A0C!important}
+.btn{min-height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;border:0;cursor:pointer;background:linear-gradient(90deg,#0A0A0C,var(--ac));width:100%;flex:none}
+.l .btn{background:#0A0A0C}
+.chip{min-height:44px;padding:0 16px;border-radius:22px;border:0;background:#232328;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--ac)}
+.l .chip{background:#fff;color:#0A0A0C}.l .chip.on{background:#0A0A0C;color:#fff}
+h1{margin:0;font-size:34px;line-height:1.1;font-weight:500;letter-spacing:-1px}
+.mut{color:#A9ADB8;font-size:14px;line-height:1.5}.l .mut{color:#5E6270}.blk .mut{color:#A9ADB8}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:#E6EAFF;color:#0A0A0C;white-space:nowrap}
+.pill.w{background:#FFF0CC}
+.b{max-width:80%;padding:12px 16px;font-size:14px;line-height:1.45;border-radius:20px;background:#17171B;border:1px solid #2A2A30;overflow-wrap:anywhere}
+.b.u{align-self:flex-start;border-radius:20px 20px 20px 6px}
+.b.a,.b.o{align-self:flex-end;background:linear-gradient(135deg,#1426C9,var(--ac));border-color:transparent;border-radius:20px 20px 6px 20px}
+nav{position:absolute;left:24px;right:24px;bottom:calc(24px + env(safe-area-inset-bottom));height:68px;border-radius:34px;background:rgba(23,23,27,.96);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+nav a{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:#C9CCD6}
+nav a.on{background:var(--ac);color:#fff}
+.sw{width:52px;height:30px;border-radius:15px;background:#B9C4C1;position:relative;border:0;padding:0;cursor:pointer;flex:none}
+.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:12px;background:#fff;transition:left .15s}
+.sw.on{background:var(--ac)}.sw.on i{left:25px}
+.opt{min-height:68px;border-radius:24px;border:0;background:#232328;color:#fff;padding:0 16px;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;width:100%}
+.opt.on{background:linear-gradient(90deg,#0A0A0C,var(--ac))}
+.dot{width:36px;height:36px;border-radius:18px;background:#0A0A0C;display:flex;align-items:center;justify-content:center;flex:none}
+.dot i{width:8px;height:8px;border-radius:4px;background:#5A5E6B}.opt.on .dot i{background:#fff}
+.in{flex:1;min-width:0;height:56px;border-radius:28px;border:1px solid #2A2A30;background:#17171B;color:#fff;padding:0 20px;font-size:16px}
+.in:disabled{opacity:.6}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+const KEY='wwa1';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dflt=()=>({live:true,day:1,rule:1,type:'Reel',tpl:'Offer',
+plan:[{k:'Reel',h:'New service launch',ok:false},{k:'Post',h:'Customer review',ok:true}],
+chats:[
+{n:'Priya M.',i:'PM',s:'me',t:'2m',m:[['u','Hi, I want to change my booking and I also need a refund.'],['a','Sure, I will connect you with our team right away so they can help with that.'],['u','Yes please, it is urgent.']]},
+{n:'Rahul S.',i:'RS',s:'ai',t:'14m',m:[['u','How much does this cost?'],['a','[Service name] is [price]. Shall I book it for you?']]},
+{n:'Neha K.',i:'NK',s:'ai',t:'1h',m:[['u','Can I book for Saturday?'],['a','Booked for Saturday at 11:30. See you then!']]}]});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||dflt()}catch(e){S=dflt()}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const BK={1:[['10:00','Consultation','Rahul S.',1],['11:30','Standard service','Neha K.',1],['16:00','Follow-up visit','Amit D.',0],['17:30','Premium service','Sneha P.',1]],2:[['10:30','Consultation','Karan V.',1],['12:00','Standard service','Anjali R.',1],['18:00','Site visit','Vikram T.',0]]};
+const HL={'Offer':'This week only: [offer]','Before / After':'See the difference','New service':'Now available: [service]'};
+const RULES=[['Customer asks for a person','Whenever they ask for a human'],['Urgent problem','Refunds, complaints, emergencies'],['Customer seems upset','Based on the tone of their messages']];
+const I={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',go:'<path d="M5 12h14M13 6l6 6-6 6"/>',sl:'<path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>'};
+const sv=n=>`<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+const nav=a=>'<nav>'+[['home','home','Home'],['chats','chat','Chats'],['bookings','cal','Bookings'],['studio','spark','Studio']].map(x=>`<a href="#${x[0]}" aria-label="${x[2]}"${a===x[0]?' class="on" aria-current="page"':''}>${sv(x[1])}</a>`).join('')+'</nav>';
+const hdr=(href,title,right)=>`<div class="row"><a class="c" href="#${href}" aria-label="Back">${sv('back')}</a><div style="font-size:17px;font-weight:600">${title}</div>${right||'<span style="width:48px"></span>'}</div>`;
+const chip=(a,v,l,on)=>`<button class="chip${on?' on':''}" data-a="${a}" data-v="${esc(v)}" aria-pressed="${!!on}">${esc(l)}</button>`;
+let deferred=null;
+const V={
+home(){const need=S.chats.filter(c=>c.s==='me').length;
+return `<div class="scr l"><div class="row"><a class="c" href="#rules" aria-label="Handover rules">${sv('sl')}</a><div class="c">JD</div></div>
+<div><div class="mut">[Owner Name]</div><h1>Hey! Good to see you</h1></div>
+${deferred?'<button class="chip on" data-a="install" style="align-self:flex-start">Install this app</button>':''}
+<div class="card row"><div><div class="mut" style="font-size:12px;font-weight:600">AI receptionist</div><div style="font-size:18px;font-weight:700;margin-top:2px">${S.live?'Live and replying':'Paused'}</div><div class="mut" style="font-size:13px">${S.live?'Answering WhatsApp 24/7':'Messages go to your team'}</div></div><button class="sw${S.live?' on':''}" data-a="live" aria-pressed="${S.live}" aria-label="AI receptionist on or off"><i></i></button></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><div class="card"><div style="font-size:26px;font-weight:600">${S.chats.length}</div><div class="mut" style="font-size:12px">Chats</div></div><div class="card"><div style="font-size:26px;font-weight:600;color:var(--ac)">${BK[1].length}</div><div class="mut" style="font-size:12px">Bookings</div></div><div class="card" style="background:#FFF3DC"><div style="font-size:26px;font-weight:600">${need}</div><div class="mut" style="font-size:12px;color:#6B3F00">Need you</div></div></div>
+<a class="card row" href="#chats"><div><div style="font-size:16px;font-weight:700">Recent chats</div><div class="mut" style="font-size:13px">${need?need+' waiting for a person':'The AI is handling everything'}</div></div>${sv('go')}</a>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><a class="card blk" href="#rules" style="min-height:130px;display:flex;flex-direction:column;justify-content:space-between"><b style="font-size:17px">Handover rules</b><span class="mut" style="font-size:13px">Choose when the AI passes a chat to you</span></a><a class="card" href="#report" style="min-height:130px;display:flex;flex-direction:column;justify-content:space-between"><b style="font-size:17px">Weekly report</b><span class="mut" style="font-size:13px">See how your week went</span></a></div></div>${nav('home')}`},
+chats(){return `<div class="scr d"><h1 style="margin-top:8px">Chats</h1>
+${S.chats.map((c,i)=>`<a class="card row" href="#chat/${i}"><span class="c">${esc(c.i)}</span><span style="flex:1;min-width:0"><b style="font-size:15px">${esc(c.n)}</b><span class="mut" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.m[c.m.length-1][1])}</span></span><span style="text-align:right"><span class="mut" style="display:block;font-size:12px">${c.t}</span><span class="pill${c.s==='me'?' w':''}">${c.s==='me'?'Needs you':'AI'}</span></span></a>`).join('')}</div>${nav('chats')}`},
+chat(i){const c=S.chats[i];if(!c)return V.chats();const me=c.s==='me';
+return `<div class="scr d fx">${hdr('chats',esc(c.n),`<span class="c">${esc(c.i)}</span>`)}
+<div class="card row" style="background:${me?'#232328':'linear-gradient(90deg,#0A0A0C,var(--ac))'}"><div><div style="font-size:14px;font-weight:700">${me?'You are in this chat':'AI is replying'}</div><div class="mut" style="font-size:12px;color:#C9CCD6">${me?'The AI is paused until you hand back':'Tap Take over to reply yourself'}</div></div><button class="chip" data-a="hand" data-i="${i}" style="background:#fff;color:#000;font-weight:700">${me?'Hand back':'Take over'}</button></div>
+<div class="msgs" id="msgs">${c.m.map(x=>`<div class="b ${x[0]}">${esc(x[1])}</div>`).join('')}</div>
+<div class="row"><input id="msg" class="in" type="text" aria-label="Type a reply" placeholder="${me?'Type a reply':'Take over to reply'}"${me?'':' disabled'}><button class="c" data-a="send" data-i="${i}" aria-label="Send" style="width:56px;height:56px;border-radius:28px;background:#fff;color:#000"${me?'':' disabled'}>${sv('go')}</button></div></div>`},
+bookings(){const l=BK[S.day],n=l.filter(x=>x[3]).length;
+return `<div class="scr l"><div style="margin-top:8px"><div class="mut">${l.length} appointments, ${n} booked by AI</div><h1>Bookings</h1></div>
+<div style="display:flex;gap:8px">${chip('day',1,'Today',S.day==1)}${chip('day',2,'Tomorrow',S.day==2)}</div>
+${l.map(x=>`<div class="card row"><span class="chip on" style="display:flex;align-items:center;min-height:36px;cursor:default">${x[0]}</span><span style="flex:1;min-width:0"><b style="font-size:15px">${x[1]}</b><span class="mut" style="display:block;font-size:13px">${x[2]}</span></span><span class="pill">${x[3]?'AI booked':'Staff'}</span></div>`).join('')}</div>${nav('bookings')}`},
+studio(){return `<div class="scr d"><div style="margin-top:8px"><div class="mut">Posts, Stories and Reels</div><h1>Studio</h1></div>
+<div style="align-self:center;width:150px;height:266px;border-radius:28px;background:linear-gradient(135deg,#1426C9,var(--ac),#9DB8FF);display:flex;flex-direction:column;justify-content:flex-end;padding:14px"><b style="font-size:18px;line-height:1.15">${HL[S.tpl]}</b><span style="font-size:11px;margin-top:6px;opacity:.85">[Business Name]</span></div>
+<div style="display:flex;gap:8px;justify-content:center">${['Reel','Story','Post'].map(k=>chip('type',k,k,S.type===k)).join('')}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">${Object.keys(HL).map(k=>chip('tpl',k,k,S.tpl===k)).join('')}</div>
+<button class="btn" data-a="add">Add to content plan</button>
+<div style="font-size:16px;font-weight:700;margin-top:4px">Content plan</div>
+${S.plan.length?S.plan.map((p,i)=>`<div class="card row"><span style="flex:1;min-width:0"><b style="font-size:15px">${esc(p.h)}</b><span class="mut" style="display:block;font-size:12px">${esc(p.k)}</span></span><button class="chip${p.ok?' on':''}" data-a="ok" data-i="${i}" aria-pressed="${p.ok}">${p.ok?'Approved':'Approve'}</button></div>`).join(''):'<div class="mut">Nothing planned yet. Add one above.</div>'}</div>${nav('studio')}`},
+rules(){return `<div class="scr d">${hdr('home','Handover rules')}
+<div class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;margin-top:16px"><div style="font-size:18px;font-weight:600">When should the AI hand over to you?</div>
+${RULES.map((r,i)=>`<button class="opt${S.rule===i?' on':''}" data-a="rule" data-v="${i}" aria-pressed="${S.rule===i}"><span class="dot"><i></i></span><span><b style="font-size:15px;display:block">${r[0]}</b><span style="font-size:12px;color:#C9CCD6">${r[1]}</span></span></button>`).join('')}</div>
+<a class="btn" href="#home" style="margin-top:8px">Done</a></div>`},
+report(){const v=[40,58,46,72,64,90,38],d='MTWTFSS';
+return `<div class="scr d">${hdr('home','Weekly report')}
+<div><h1>Your week</h1><div class="mut" style="margin-top:6px">Sample numbers</div></div>
+<div style="border-radius:28px;padding:20px;background:linear-gradient(135deg,#1426C9,var(--ac),#9DB8FF)"><div style="font-size:14px;font-weight:600">Customers helped by the AI</div><div style="font-size:56px;font-weight:500;letter-spacing:-2px;line-height:1.1;margin:6px 0">128</div><span class="pill" style="background:rgba(10,10,12,.55);color:#fff">+18% vs last week</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="card"><div style="font-size:30px;font-weight:600">31</div><div class="mut">Bookings made</div></div><div class="card"><div style="font-size:30px;font-weight:600">22</div><div class="mut">Chats answered after hours</div></div></div>
+<div class="card"><div style="font-size:14px;font-weight:600">Chats per day</div><div style="display:flex;align-items:flex-end;justify-content:space-between;height:110px;margin-top:12px">${v.map((h,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span role="img" aria-label="${h} chats" style="width:28px;height:${h*.7}px;border-radius:10px;background:${h===90?'var(--ac)':'#2A2A30'}"></span><span style="font-size:11px;color:#A9ADB8">${d[i]}</span></div>`).join('')}</div></div></div>`}
+};
+let route=(location.hash||'#home').slice(1);
+function render(){const p=route.split('/');const r=V[p[0]]?p[0]:'home';document.getElementById('app').innerHTML=V[r](p[1]);const m=document.getElementById('msgs');if(m)m.scrollTop=m.scrollHeight;}
+window.addEventListener('hashchange',()=>{route=(location.hash||'#home').slice(1);render()});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t||t.disabled)return;const a=t.dataset.a,v=t.dataset.v,i=+t.dataset.i;
+if(a==='install'){if(deferred){deferred.prompt();deferred=null;}}
+else if(a==='live')S.live=!S.live;
+else if(a==='day')S.day=+v;
+else if(a==='rule')S.rule=+v;
+else if(a==='type')S.type=v;
+else if(a==='tpl')S.tpl=v;
+else if(a==='add')S.plan.push({k:S.type,h:HL[S.tpl],ok:false});
+else if(a==='ok')S.plan[i].ok=!S.plan[i].ok;
+else if(a==='hand'){const c=S.chats[i];c.s=c.s==='ai'?'me':'ai';}
+else if(a==='send'){const x=(document.getElementById('msg')||{}).value;if(!x||!x.trim())return;S.chats[i].m.push(['o',x.trim()]);}
+save();render();});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='msg'){const b=document.querySelector('[data-a="send"]');if(b)b.click();}});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(route==='home')render();});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+render();
+})();
+</script>
+</body>
+</html>

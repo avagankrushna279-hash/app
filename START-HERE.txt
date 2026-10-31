@@ -1,0 +1,21 @@
+AI RECEPTIONIST: START HERE
+
+A. Deploy on Render (easiest)
+1. Put this folder in a GitHub repository (the .env file must NOT be in it).
+2. In Render: New > Blueprint > pick the repository. Render reads render.yaml and creates the web app and the database.
+3. When asked, enter ADMIN_EMAIL and ADMIN_PASSWORD (8+ characters). Leave the other blank values empty for now.
+4. When the deploy finishes, open the web address Render gives you and sign in with that email and password.
+5. Tap "Add a client", enter a business, an owner login and (optionally) a WhatsApp phone number ID.
+6. Sign in as that owner (or tap the client from the admin list) and open Chats. In test mode there is a
+   "Try as a customer" box: type a message and the AI answers. No WhatsApp or AI key is needed yet.
+
+B. Go live (when you are ready)
+In the Render dashboard, Environment tab:
+- ANTHROPIC_API_KEY = your key, MOCK_LLM = 0
+- WHATSAPP_MODE = (empty), WHATSAPP_TOKEN, WHATSAPP_APP_SECRET from Meta
+- WHATSAPP_VERIFY_TOKEN is already generated; paste the same value into Meta's webhook setup
+- Webhook URL in Meta: https://YOUR-ADDRESS/webhook/whatsapp, subscribe to "messages"
+Then change the web service and database plans from free to paid: free services sleep and the free database expires after 30 days.
+
+C. On your own computer
+See README.md section 1 (npm install, node cli.js migrate, node cli.js demo, npm start).

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Receptionist">
+<title>AI Receptionist</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ac:#2B4EFF}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0A0A0C}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #9DB8FF;outline-offset:2px}
+#app{position:relative;max-width:430px;margin:0 auto;height:100vh;height:100dvh;overflow:hidden}
+.scr{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:calc(20px + env(safe-area-inset-top)) 24px 130px}
+.scr.nonav{padding-bottom:40px}.scr.fx{overflow:hidden;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.d{background-color:#0A0A0C;background-image:linear-gradient(#17171B 1px,transparent 1px),linear-gradient(90deg,#17171B 1px,transparent 1px);background-size:28px 28px;color:#fff}
+.l{background:#F2F3F6;color:#0A0A0C}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.c{width:48px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;flex:none;padding:0;border:1px solid #2A2A30;background:#17171B;color:#fff;cursor:pointer;font-size:14px;font-weight:700}
+.l .c{border-color:#D9DBE1;background:#fff;color:#0A0A0C}
+.card{border-radius:26px;background:#17171B;border:1px solid #2A2A30;padding:16px}
+.l .card{background:#fff;border-color:#fff}
+.blk{background:#0A0A0C!important;color:#fff;border-color:#0A0A0C!important}.blk .mut{color:#A9ADB8!important}
+.btn{min-height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(90deg,#0A0A0C,var(--ac));width:100%;flex:none;border:1px solid #2A2A30}
+.l .btn{background:#0A0A0C;border-color:#0A0A0C}.btn:disabled{opacity:.6;cursor:default}
+.chip{white-space:nowrap;min-height:44px;padding:0 16px;border-radius:22px;border:0;background:#232328;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--ac)}.l .chip{background:#fff;color:#0A0A0C}.l .chip.on{background:#0A0A0C;color:#fff}.chip.sm{min-height:36px;padding:0 12px;font-size:13px}
+h1{margin:0;font-size:34px;line-height:1.1;font-weight:500;letter-spacing:-1px}
+.mut{color:#A9ADB8;font-size:14px;line-height:1.5}.l .mut{color:#5E6270}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:#E6EAFF;color:#0A0A0C;white-space:nowrap}.pill.w{background:#FFF0CC}
+.b{max-width:80%;padding:12px 16px;font-size:14px;line-height:1.45;border-radius:20px;background:#17171B;border:1px solid #2A2A30;overflow-wrap:anywhere}
+.b.u{align-self:flex-start;border-radius:20px 20px 20px 6px}
+.b.a,.b.o{align-self:flex-end;background:linear-gradient(135deg,#1426C9,var(--ac));border-color:transparent;border-radius:20px 20px 6px 20px}
+nav{position:absolute;left:24px;right:24px;bottom:calc(24px + env(safe-area-inset-bottom));height:68px;border-radius:34px;background:rgba(23,23,27,.96);display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+nav a{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;color:#C9CCD6}nav a.on{background:var(--ac);color:#fff}
+.sw{width:52px;height:30px;border-radius:15px;background:#B9C4C1;position:relative;border:0;padding:0;cursor:pointer;flex:none}
+.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:12px;background:#fff;transition:left .15s}.sw.on{background:var(--ac)}.sw.on i{left:25px}
+.in{width:100%;height:52px;border-radius:26px;border:1px solid #2A2A30;background:#17171B;color:#fff;padding:0 18px;font-size:16px}
+.l .in{border-color:#D9DBE1;background:#fff;color:#0A0A0C}textarea.in{height:auto;padding:14px 18px;border-radius:22px;resize:vertical}
+select.in{appearance:none}::placeholder{color:#8A8E9B}.in:disabled{opacity:.6}
+.lbl{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wrap{display:flex;flex-wrap:wrap;gap:8px}.col{display:flex;flex-direction:column;gap:10px}
+.err{border-radius:18px;padding:12px 16px;background:#3A1414;color:#FFD9D9;font-size:14px}
+.ok{border-radius:18px;padding:12px 16px;background:#12301F;color:#C9F2D8;font-size:14px}
+.bar{height:6px;border-radius:3px;background:#2A2A30;overflow:hidden}.l .bar{background:#ECEEF3}.bar i{display:block;height:6px;border-radius:3px}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.ban{border-radius:18px;padding:10px 14px;background:#FFF0CC;color:#6B3F00;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.x{color:#A9ADB8;font-size:12px;line-height:1.4}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const val=id=>($(id)||{}).value||'';
+const S={token:localStorage.getItem('wwa_token')||'',user:null,as:sessionStorage.getItem('wwa_as')||'',asName:sessionStorage.getItem('wwa_asname')||'',err:'',msg:'',today:'',deferred:null,form:{},bkOpen:false,bkDay:0,st:{type:'post',res:null},g:{edit:false},set:null,busy:false};
+async function api(path,o={}){
+  const adm=/^\/api\/(admin|login|me)/.test(path);
+  const url=path+(S.as&&!adm?(path.includes('?')?'&':'?')+'client='+encodeURIComponent(S.as):'');
+  const r=await fetch(url,{method:o.method||'GET',headers:{'content-type':'application/json',...(S.token?{authorization:'Bearer '+S.token}:{})},body:o.body===undefined?undefined:JSON.stringify(o.body)});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok){const e=new Error(j.error||('Request failed ('+r.status+')'));e.status=r.status;e.expired=r.status===401&&path!=='/api/login';throw e}
+  return j;
+}
+const I={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',go:'<path d="M5 12h14M13 6l6 6-6 6"/>',sl:'<path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>'};
+const ic=n=>`<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+const nav=a=>'<nav>'+[['home','home','Home'],['chats','chat','Chats'],['bookings','cal','Bookings'],['google','pin','Google profile'],['studio','spark','Studio']].map(x=>`<a href="#${x[0]}" aria-label="${x[2]}"${a===x[0]?' class="on" aria-current="page"':''}>${ic(x[1])}</a>`).join('')+'</nav>';
+const hdr=(href,title,right)=>`<div class="row"><a class="c" href="#${href}" aria-label="Back">${ic('back')}</a><div style="font-size:17px;font-weight:600">${esc(title)}</div>${right||'<span style="width:48px"></span>'}</div>`;
+const chip=(a,v,l,on,cls='',extra='')=>`<button class="chip${on?' on':''} ${cls}" data-a="${a}" data-v="${esc(v)}" ${extra} aria-pressed="${!!on}">${esc(l)}</button>`;
+const sw=(a,v,on,label)=>`<button class="sw${on?' on':''}" data-a="${a}" data-v="${esc(v)}" aria-pressed="${!!on}" aria-label="${esc(label)}"><i></i></button>`;
+const fld=(id,label,v,extra='')=>`<div><label class="lbl" for="${id}">${esc(label)}</label><input class="in" id="${id}" value="${esc(v)}" ${extra}></div>`;
+const errBox=()=>(S.err?`<div class="err" role="alert">${esc(S.err)}</div>`:'')+(S.msg?`<div class="ok" role="status">${esc(S.msg)}</div>`:'');
+const banner=()=>S.as?`<div class="ban"><span>Viewing ${esc(S.asName)}</span><button class="chip sm" data-a="back-admin">Back to clients</button></div>`:'';
+const when=t=>{const d=new Date(t),n=new Date();return d.toDateString()===n.toDateString()?d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString([],{day:'numeric',month:'short'})};
+const addDays=(d,n)=>{const x=new Date(d+'T00:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)};
+const nice=d=>new Date(d+'T00:00:00Z').toLocaleDateString([],{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
+
+const V={
+async login(){return `<div class="scr d nonav" style="justify-content:center"><div><div class="mut">AI receptionist</div><h1>Sign in</h1></div>${errBox()}
+<div><label class="lbl" for="em">Email</label><input class="in" id="em" type="email" autocomplete="username" data-enter="login"></div>
+<div><label class="lbl" for="pw">Password</label><input class="in" id="pw" type="password" autocomplete="current-password" data-enter="login"></div>
+<button class="btn" data-a="login">Sign in</button><div class="mut" style="text-align:center">Your account is created by your agency.</div></div>`},
+
+async home(){const d=await api('/api/home');S.today=d.today;const c=d.client,s=d.stats;
+return `<div class="scr l">${banner()}<div class="row"><a class="c" href="#setup" aria-label="Settings">${ic('sl')}</a>${S.deferred?'<button class="chip on" data-a="install">Install app</button>':''}</div>
+<div><div class="mut">${esc(c.name)}</div><h1>Hey! Good to see you</h1></div>${errBox()}
+${c.wa_number_id?'':'<div class="ban">WhatsApp is not connected yet. Ask your agency to add your number.</div>'}
+${c.status==='paused'?'<div class="ban">Your account is paused. The AI is not replying.</div>':''}
+<div class="card row"><div><div class="mut" style="font-size:12px;font-weight:600">AI receptionist</div><div style="font-size:18px;font-weight:700;margin-top:2px">${c.ai_enabled?'Live and replying':'Paused'}</div><div class="mut" style="font-size:13px">${c.ai_enabled?'Answering WhatsApp 24/7':'Messages wait for you'}</div></div>${sw('live',!c.ai_enabled,c.ai_enabled,'AI receptionist on or off')}</div>
+<div class="g2" style="grid-template-columns:repeat(3,1fr)"><div class="card"><div style="font-size:26px;font-weight:600">${s.chats_today}</div><div class="mut" style="font-size:12px">Chats today</div></div><div class="card"><div style="font-size:26px;font-weight:600;color:var(--ac)">${s.bookings_today}</div><div class="mut" style="font-size:12px">Bookings</div></div><div class="card" style="background:#FFF3DC"><div style="font-size:26px;font-weight:600">${s.needs_you}</div><div class="mut" style="font-size:12px;color:#6B3F00">Need you</div></div></div>
+<a class="card row" href="#chats"><div><div style="font-size:16px;font-weight:700">Chats</div><div class="mut" style="font-size:13px">${s.needs_you?s.needs_you+' waiting for a person':'The AI is handling everything'}</div></div>${ic('go')}</a>
+<div class="g2"><a class="card blk" href="#rules" style="min-height:130px;display:flex;flex-direction:column;justify-content:space-between"><b style="font-size:17px">Handover rules</b><span class="mut" style="font-size:13px">Choose when the AI passes a chat to you</span></a><a class="card" href="#report" style="min-height:130px;display:flex;flex-direction:column;justify-content:space-between"><b style="font-size:17px">Weekly report</b><span class="mut" style="font-size:13px">See how your week went</span></a></div></div>${nav('home')}`},
+
+async chats(){const d=await api('/api/chats');
+return `<div class="scr d">${banner()}<h1 style="margin-top:8px">Chats</h1>${errBox()}
+${d.test_mode?`<div class="card col"><div style="font-size:14px;font-weight:700">Test mode: try it as a customer</div><div class="x">WhatsApp is in mock mode. Type a message as if you were a customer and watch the AI answer.</div>${fld('t-name','Customer name','Test customer')}${fld('t-text','Message','','placeholder="How much is cleaning?" data-enter="tmsg"')}<button class="btn" data-a="tmsg">Send as customer</button></div>`:''}
+${d.chats.length?d.chats.map(c=>`<a class="card row" href="#chat/${c.id}"><span class="c">${esc((c.name||c.phone||'?').slice(0,2).toUpperCase())}</span><span style="flex:1;min-width:0"><b style="font-size:15px">${esc(c.name||'+'+c.phone)}</b><span class="mut" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.last_body||'')}</span></span><span style="text-align:right"><span class="mut" style="display:block;font-size:12px">${when(c.last_message_at)}</span><span class="pill${c.status==='handed_over'?' w':''}">${c.status==='handed_over'?'Needs you':c.status==='closed'?'Closed':'AI'}</span></span></a>`).join(''):'<div class="card mut">No chats yet. When a customer messages your WhatsApp number, it appears here.</div>'}</div>${nav('chats')}`},
+
+async chat(id){const d=await api('/api/chats/'+id),c=d.chat,me=c.status==='handed_over';
+return `<div class="scr d fx">${hdr('chats',c.name||'+'+c.phone,`<span class="c">${esc((c.name||c.phone||'?').slice(0,2).toUpperCase())}</span>`)}${errBox()}
+<div class="card row" style="background:${me?'#232328':'linear-gradient(90deg,#0A0A0C,var(--ac))'}"><div><div style="font-size:14px;font-weight:700">${me?'You are in this chat':c.status==='closed'?'Chat closed':'AI is replying'}</div><div class="x" style="color:#C9CCD6">${me?esc(c.handover_reason||'The AI is paused'):'Tap Take over to reply yourself'}</div></div><button class="chip sm" data-a="cstatus" data-v="${me?'ai':'handed_over'}" data-i="${c.id}" style="background:#fff;color:#000">${me?'Hand back':'Take over'}</button></div>
+<div class="msgs" id="msgs">${d.messages.map(m=>`<div class="b ${m.role==='customer'?'u':m.role==='ai'?'a':'o'}">${esc(m.body)}${m.send_error?`<div class="x" style="color:#FFB4A8;margin-top:4px">Not delivered: ${esc(m.send_error)}</div>`:''}<div class="x" style="margin-top:4px;opacity:.7">${m.role==='ai'?'AI · ':m.role==='owner'?'You · ':''}${when(m.created_at)}</div></div>`).join('')}</div>
+<div class="row"><input class="in" id="msg" placeholder="${me?'Type a reply':'Take over to reply'}" aria-label="Type a reply" data-enter="reply"${me?'':' disabled'}><button class="c" data-a="reply" data-i="${c.id}" aria-label="Send" style="width:56px;height:56px;border-radius:28px;background:#fff;color:#000"${me?'':' disabled'}>${ic('go')}</button></div></div>`},
+
+async bookings(){if(!S.today)S.today=(await api('/api/home')).today;const from=S.today;const d=await api('/api/bookings?from='+from+'&days=2');
+const day=addDays(from,S.bkDay),list=d.bookings.filter(b=>b.date===day);
+const f=S.form;
+return `<div class="scr l">${banner()}<div style="margin-top:8px"><div class="mut">${list.filter(b=>b.status==='booked').length} booked, ${list.filter(b=>b.source==='ai'&&b.status==='booked').length} by AI</div><h1>Bookings</h1></div>${errBox()}
+<div class="wrap">${chip('bkday',0,'Today',S.bkDay===0)}${chip('bkday',1,'Tomorrow',S.bkDay===1)}<button class="chip" data-a="bkopen" style="margin-left:auto">${S.bkOpen?'Close':'+ Add'}</button></div>
+${S.bkOpen?`<div class="card col"><div class="g2">${fld('bn','Customer name',f.bn||'')}${fld('bp','Phone (optional)',f.bp||'','type="tel"')}</div><div class="g2">${fld('bs','Service',f.bs||'')}${fld('bt','Time',f.bt||'10:00','type="time"')}</div><button class="btn" data-a="bkadd">Add booking for ${esc(nice(day))}</button></div>`:''}
+${list.length?list.map(b=>`<div class="card row" style="${b.status!=='booked'?'opacity:.55':''}"><span class="chip on" style="display:flex;align-items:center;min-height:36px;cursor:default">${b.time}</span><span style="flex:1;min-width:0"><b style="font-size:15px">${esc(b.service)}</b><span class="mut" style="display:block;font-size:13px">${esc(b.name||'')} · ${b.duration_min} min</span></span><span style="text-align:right"><span class="pill">${b.status!=='booked'?esc(b.status):b.source==='ai'?'AI booked':'Staff'}</span>${b.status==='booked'?`<button class="chip sm" data-a="bkcancel" data-i="${b.id}" style="display:block;margin-top:6px">Cancel</button>`:''}</span></div>`).join(''):'<div class="card mut">No bookings for this day.</div>'}</div>${nav('bookings')}`},
+
+async studio(){const c=await api('/api/creatives');const t=S.st,r=t.res;
+const types=[['post','Google post'],['reel','Reel'],['story','Story'],['igpost','Instagram post'],['review','Review reply']];
+let out='';
+if(r){out=`<div class="card col"><div style="font-size:12px;font-weight:600;color:#A9ADB8">AI draft</div>`;
+ if(t.type==='post')out+=`<div style="font-size:14px;line-height:1.5">${esc(r.body)}</div><div class="x">Button: ${esc(r.cta)}${r.photo_idea?' · Photo: '+esc(r.photo_idea):''}</div>`;
+ else if(t.type==='review')out+=`<div style="font-size:14px;line-height:1.5">${esc(r.reply)}</div>${r.needs_owner?'<div class="pill w">Read before posting'+(r.reason?': '+esc(r.reason):'')+'</div>':''}`;
+ else out+=`<b>${esc(r.hook||'')}</b>${r.scenes.map(s=>`<div class="x" style="font-size:13px"><b>${esc(s.seconds)}s</b> ${esc(s.visual)}${s.on_screen_text?' · Text: '+esc(s.on_screen_text):''}</div>`).join('')}${r.image_idea?`<div class="x">${esc(r.image_idea)}</div>`:''}<div style="font-size:14px">${esc(r.caption)}</div><div class="x">${r.hashtags.map(h=>'#'+esc(h)).join(' ')}</div>`;
+ out+=(t.type==='review'?`<button class="chip" data-a="copyres">Copy reply</button>`:`<button class="btn" data-a="stsave">Save to content plan</button>`)+`</div>`;}
+return `<div class="scr d">${banner()}<div style="margin-top:8px"><div class="mut">Posts, Reels and review replies</div><h1>Studio</h1></div>${errBox()}
+<div class="wrap">${types.map(x=>chip('sttype',x[0],x[1],t.type===x[0])).join('')}</div>
+${t.type==='review'?`<div class="g2">${fld('rn','Reviewer first name','')}${fld('rr','Stars (1-5)','5','type="number" min="1" max="5"')}</div><div><label class="lbl" for="rt">Review text</label><textarea class="in" id="rt" rows="3"></textarea></div>`:`<div><label class="lbl" for="tp">${t.type==='post'?'What is the post about?':'What should it achieve?'}</label><textarea class="in" id="tp" rows="3" placeholder="${t.type==='post'?'Free check-up week this month':'Get more cleaning bookings'}"></textarea></div>`}
+<button class="btn" data-a="stdraft"${S.busy?' disabled':''}>${S.busy?'Writing...':'Draft with AI'}</button>${out}
+<div style="font-size:16px;font-weight:700;margin-top:4px">Content plan</div>
+${c.creatives.length?c.creatives.map(x=>`<div class="card"><div class="row"><b style="font-size:15px">${esc(x.headline||x.kind)}</b><span class="pill">${esc(x.kind)}</span></div><div class="mut" style="margin-top:6px;font-size:13px">${esc((x.caption||'').slice(0,160))}</div><div class="wrap" style="margin-top:10px">${chip('crstatus',x.status==='approved'?'draft':'approved',x.status==='approved'?'Approved':'Approve',x.status==='approved','sm','data-i="'+x.id+'"')}<button class="chip sm" data-a="crdel" data-i="${x.id}">Delete</button></div></div>`).join(''):'<div class="mut">Nothing saved yet. Draft something above and save it here.</div>'}</div>${nav('studio')}`},
+
+async google(){const d=await api('/api/gbp');const sv=d.saved,lt=d.latest;
+if(!sv||S.g.edit)return `<div class="scr d">${banner()}<div style="margin-top:8px"><div class="mut">Visibility check</div><h1>Google profile</h1></div>${errBox()}
+<div class="card"><div style="font-size:16px;font-weight:700">Check your Google Business Profile</div><div class="mut" style="margin-top:6px">See your score, what to fix first and how people find you. Live Google sync needs Google's API approval, so for now paste your profile details as JSON, or try the sample.</div></div>
+<button class="btn" data-a="gsample"${S.busy?' disabled':''}>${S.busy?'Working...':'Try the sample profile'}</button>
+<div class="card col"><div style="font-size:14px;font-weight:600">Or paste your profile JSON</div><textarea class="in" id="gj" rows="6" aria-label="Profile JSON" placeholder='{"profile":{...},"metrics":{...}}'>${esc(S.form.gj||'')}</textarea><button class="btn" data-a="gimport"${S.busy?' disabled':''}>Save and check</button></div></div>${nav('google')}`;
+const a=lt&&lt.audit,pf=a&&a.performance,ad=lt&&lt.advice,col={high:'#FFD0CC',medium:'#FFF0CC',low:'#E6EAFF'};
+const ch=c=>c==null?'':`<span style="font-size:12px;font-weight:700;color:${c>=0?'#9BE7B8':'#FFB4A8'}">${c>0?'+':''}${c}%</span>`;
+return `<div class="scr d">${banner()}<div class="row"><div><div class="mut">Visibility check</div><h1>Google profile</h1></div><button class="chip sm" data-a="gedit">Replace</button></div>${errBox()}
+${!a?`<button class="btn" data-a="gaudit"${S.busy?' disabled':''}>${S.busy?'Working...':'Run the check'}</button>`:`
+<div style="border-radius:28px;padding:20px;background:linear-gradient(135deg,#1426C9,var(--ac),#9DB8FF)"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:64px;font-weight:500;letter-spacing:-2px;line-height:1">${a.score}</span><span style="font-size:18px;font-weight:600">/100 &middot; ${a.grade}</span></div><div style="font-size:14px;margin-top:8px">${esc(a.summary)}</div></div>
+${pf?`<div class="g2">${[['Views','impressions'],['Calls','calls'],['Directions','directions'],['Website clicks','websiteClicks']].map(m=>`<div class="card"><div class="mut" style="font-size:12px">${m[0]}</div><div class="row" style="margin-top:2px"><b style="font-size:24px">${pf[m[1]].current}</b>${ch(pf[m[1]].changePct)}</div></div>`).join('')}</div>${pf.notes.map(n=>`<div class="mut">${esc(n)}</div>`).join('')}`:''}
+<div style="font-size:16px;font-weight:700">Fix first</div>
+${a.issues.filter(i=>i.impact>0).slice(0,5).map(i=>`<div class="card"><div class="row"><b style="font-size:15px">${esc(i.title)}</b><span class="pill" style="background:${col[i.severity]}">${i.severity}</span></div><div class="mut" style="margin-top:6px">${esc(i.fix)}</div><div class="x" style="margin-top:6px">About ${i.effortMinutes} min</div></div>`).join('')}
+<button class="btn" data-a="gadvise"${S.busy?' disabled':''}>${S.busy?'Working...':ad?'Refresh AI suggestions':'Get AI suggestions'}</button>
+${ad?`<div style="font-size:16px;font-weight:700">AI suggestions</div><div class="card" style="font-size:14px;line-height:1.5">${esc(ad.summary)}</div>${ad.priorities.map((p,n)=>`<div class="card"><b style="font-size:15px">${n+1}. ${esc(p.title)}</b><div class="mut" style="margin-top:6px">${esc(p.why)}</div><ul class="mut" style="margin:8px 0 0;padding-left:18px">${p.steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('')}
+${ad.description?`<div class="card"><div class="row"><b style="font-size:15px">Suggested description</b><button class="chip sm" data-a="gcopy">Copy</button></div><div style="margin-top:8px;font-size:14px;line-height:1.5">${esc(ad.description)}</div><div class="x" style="margin-top:6px">${ad.description.length}/750 characters. Check every fact before you use it.</div></div>`:''}
+${ad.post_ideas&&ad.post_ideas.length?`<div class="card"><b style="font-size:15px">Post ideas</b><ul class="mut" style="margin:8px 0 0;padding-left:18px">${ad.post_ideas.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}`:''}`}</div>${nav('google')}`},
+
+async rules(){const d=await api('/api/rules');const R=[['asks_person','Customer asks for a person','Whenever they ask for a human'],['urgent_problem','Urgent problem','Refunds, complaints, emergencies'],['upset','Customer seems upset','Based on the tone of their messages']];
+return `<div class="scr d nonav">${banner()}${hdr('home','Handover rules')}${errBox()}<div class="mut">When one of these happens, the AI stops, tells the customer your team will reply, and the chat shows as "Needs you".</div>
+${R.map(r=>`<div class="card row"><div><b style="font-size:15px">${r[1]}</b><div class="x" style="font-size:13px">${r[2]}</div></div>${sw('rule',r[0]+'|'+!d.rules[r[0]],d.rules[r[0]],r[1])}</div>`).join('')}
+<div class="x">The AI also hands over whenever it does not know the answer.</div></div>`},
+
+async report(){const d=await api('/api/report');const mx=Math.max(1,...d.days.map(x=>x.chats));
+return `<div class="scr d nonav">${banner()}${hdr('home','Weekly report')}${errBox()}<div><h1>Your week</h1><div class="mut" style="margin-top:6px">The last 7 days</div></div>
+<div style="border-radius:28px;padding:20px;background:linear-gradient(135deg,#1426C9,var(--ac),#9DB8FF)"><div style="font-size:14px;font-weight:600">Customers helped by the AI</div><div style="font-size:56px;font-weight:500;letter-spacing:-2px;line-height:1.1;margin:6px 0">${d.helped}</div>${d.change_pct==null?'':`<span class="pill" style="background:rgba(10,10,12,.55);color:#fff">${d.change_pct>0?'+':''}${d.change_pct}% vs the week before</span>`}</div>
+<div class="g2"><div class="card"><div style="font-size:30px;font-weight:600">${d.bookings}</div><div class="mut">Bookings made</div></div><div class="card"><div style="font-size:30px;font-weight:600">${d.after_hours}</div><div class="mut">Chats started after hours</div></div></div>
+<div class="card"><div style="font-size:14px;font-weight:600">Chats per day</div><div style="display:flex;align-items:flex-end;justify-content:space-between;height:110px;margin-top:12px">${d.days.map(x=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span role="img" aria-label="${x.chats} chats" style="width:28px;height:${Math.max(4,Math.round(x.chats/mx*80))}px;border-radius:10px;background:${x.chats===mx&&x.chats>0?'var(--ac)':'#2A2A30'}"></span><span style="font-size:11px;color:#A9ADB8">${new Date(x.day+'T00:00:00Z').toLocaleDateString([],{weekday:'narrow',timeZone:'UTC'})}</span></div>`).join('')}</div></div></div>`},
+
+async setup(){const [a,k]=await Promise.all([api('/api/settings'),api('/api/knowledge')]);if(!S.set)S.set=a.settings;const s=S.set;
+const LANGS=['English','Hindi','Marathi','Gujarati','Tamil','Bengali'],DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+return `<div class="scr d nonav">${banner()}${hdr('home','Agent setup')}${errBox()}
+<div class="card col">${fld('s-name','Business name',s.name,'data-f="name"')}${fld('s-city','City',s.city||'','data-f="city"')}
+<div><span class="lbl">Type of business</span><div class="wrap">${['Clinic','Salon','Restaurant','Gym','Retail','Other'].map(t=>chip('sset',['business_type',t].join('|'),t,s.business_type===t)).join('')}</div></div>
+<div><span class="lbl">Tone of voice</span><div class="wrap">${['Friendly','Formal','Short'].map(t=>chip('sset',['tone',t].join('|'),t,s.tone===t)).join('')}</div></div>
+<div><span class="lbl">Languages the AI replies in</span><div class="wrap">${LANGS.map(t=>chip('slang',t,t,(s.languages||[]).includes(t))).join('')}</div></div>
+${fld('s-hours','Opening hours (the AI reads this)',s.opening_hours||'','data-f="opening_hours" placeholder="Mon to Sat, 10am to 8pm"')}
+<div class="g2">${fld('s-open','Opens',s.open_time,'type="time" data-f="open_time"')}${fld('s-close','Closes',s.close_time,'type="time" data-f="close_time"')}</div>
+<div><span class="lbl">Closed on</span><div class="wrap">${DAYS.map((t,i)=>chip('sday',i,t,(s.closed_days||[]).includes(i))).join('')}</div></div>
+${fld('s-own','Your WhatsApp number for alerts',s.owner_whatsapp||'','type="tel" data-f="owner_whatsapp" placeholder="+91..."')}
+<button class="btn" data-a="ssave">Save changes</button></div>
+<div style="font-size:16px;font-weight:700">Services and prices</div>
+<div class="card col">${k.services.map(x=>`<div class="row"><span style="flex:1;min-width:0;font-size:14px"><b>${esc(x.name)}</b> ${x.price!=null?'· Rs '+x.price:''}${x.duration_min?' · '+x.duration_min+' min':''}</span><button class="chip sm" data-a="svcdel" data-i="${x.id}">Remove</button></div>`).join('')||'<div class="mut">None yet.</div>'}
+<div class="g2">${fld('v-name','Service','')}${fld('v-price','Price (Rs)','','type="number" min="0"')}</div>${fld('v-dur','Minutes','30','type="number" min="5"')}<button class="chip" data-a="svcadd">Add service</button></div>
+<div style="font-size:16px;font-weight:700">Common questions</div>
+<div class="card col">${k.faqs.map(x=>`<div class="row"><span style="flex:1;min-width:0;font-size:14px"><b>${esc(x.question)}</b><span class="mut" style="display:block;font-size:13px">${esc(x.answer)}</span></span><button class="chip sm" data-a="faqdel" data-i="${x.id}">Remove</button></div>`).join('')||'<div class="mut">None yet.</div>'}
+${fld('f-q','Question','')}${fld('f-a','Answer','')}<button class="chip" data-a="faqadd">Add question</button></div>
+<button class="chip" data-a="logout" style="align-self:flex-start">Sign out</button></div>`},
+
+async admin(){const d=await api('/api/admin/clients');
+return `<div class="scr d nonav"><div class="row"><div><div class="mut">Agency admin</div><h1>Clients</h1></div><button class="chip sm" data-a="logout">Sign out</button></div>${errBox()}
+<div class="g2"><div class="card"><div style="font-size:26px;font-weight:600">${d.clients.length}</div><div class="mut" style="font-size:12px">Clients</div></div><div class="card"><div style="font-size:26px;font-weight:600">${d.clients.filter(c=>c.percent_used>=80).length}</div><div class="mut" style="font-size:12px">Near their limit</div></div></div>
+<a href="#admin-new" class="btn">Add a client</a>
+${d.clients.map(c=>`<div class="card col"><div class="row"><b style="font-size:16px">${esc(c.name)}</b><span class="pill${c.status==='paused'?' w':''}">${esc(c.status)}</span></div><div class="mut" style="font-size:13px">${esc(c.business_type)} · ${esc(c.plan||'No plan')} · ${c.wa_number_id?'WhatsApp connected':'No WhatsApp number'}</div><div class="bar"><i style="width:${Math.min(100,c.percent_used||0)}%;background:${c.percent_used>=80?'#C2410C':'var(--ac)'}"></i></div><div class="x">${c.messages_used} of ${c.monthly_message_limit||'?'} AI replies this month</div><div class="wrap"><button class="chip sm on" data-a="open" data-i="${c.id}" data-v="${esc(c.name)}">Open</button><button class="chip sm" data-a="cstat" data-i="${c.id}" data-v="${c.status==='paused'?'active':'paused'}">${c.status==='paused'?'Activate':'Pause'}</button></div></div>`).join('')||'<div class="card mut">No clients yet. Add your first one.</div>'}</div>`},
+
+async 'admin-new'(){const d=await api('/api/admin/clients');const f=S.form;
+return `<div class="scr d nonav">${hdr('admin','New client')}${errBox()}
+<div class="card col">${fld('n-name','Business name',f.nn||'')}${fld('n-city','City',f.nc||'')}
+<div><label class="lbl" for="n-type">Type</label><select class="in" id="n-type">${['Clinic','Salon','Restaurant','Gym','Retail','Other'].map(t=>`<option>${t}</option>`).join('')}</select></div>
+<div><label class="lbl" for="n-plan">Plan</label><select class="in" id="n-plan">${d.plans.map(p=>`<option>${esc(p.name)}</option>`).join('')}</select></div>
+${fld('n-email','Owner login email',f.ne||'','type="email"')}${fld('n-pass','Owner password (8+ characters)','','type="text" autocomplete="off"')}
+${fld('n-wa','WhatsApp phone number ID (from Meta)',f.nw||'','placeholder="optional now, add later"')}${fld('n-own','Owner WhatsApp number',f.no||'','type="tel" placeholder="+91..."')}
+<button class="btn" data-a="newclient">Create client</button></div></div>`}
+};
+
+const route=()=>{const h=(location.hash||'').slice(1);const p=h.split('/');return [p[0]||'',p[1]]};
+const OWNER=['home','chats','chat','bookings','studio','google','rules','report','setup'];
+const isTyping=()=>/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'');
+function grab(){document.querySelectorAll('[data-f]').forEach(e=>{if(S.set)S.set[e.dataset.f]=e.value})}
+async function render(silent,force){
+  let [r,arg]=route();
+  if(!S.token){r='login'}
+  else{
+    if(!S.user){try{S.user=await api('/api/me')}catch(e){return logout()}}
+    const admin=S.user.role==='admin';
+    if(admin&&!S.as&&OWNER.includes(r))r='admin';
+    if(!admin&&!OWNER.includes(r))r='home';
+    if(admin&&!S.as&&!['admin','admin-new'].includes(r))r='admin';
+    if(!r||r==='login')r=admin&&!S.as?'admin':'home';
+  }
+  const app=$('app');
+  const keep=silent?{s:(document.querySelector('.scr')||{}).scrollTop,m:$('msgs')?{t:$('msgs').scrollTop,b:$('msgs').scrollHeight-$('msgs').scrollTop-$('msgs').clientHeight<80}:null}:null;
+  if(!silent)app.innerHTML='<div class="scr d nonav"><div class="mut" style="margin-top:40vh;text-align:center">Loading...</div></div>';
+  let html;
+  try{html=await V[r](arg)}catch(e){
+    if(e.expired)return logout();
+    html=`<div class="scr d nonav"><div class="err" role="alert">${esc(e.message)}</div><button class="chip" data-a="retry" style="align-self:flex-start">Try again</button><button class="chip" data-a="logout" style="align-self:flex-start">Sign out</button></div>`;
+  }
+  if(silent&&!force&&isTyping())return;
+  app.innerHTML=html;
+  const m=$('msgs');
+  if(m&&(!keep||!keep.m||keep.m.b))m.scrollTop=m.scrollHeight;else if(m&&keep&&keep.m)m.scrollTop=keep.m.t;
+  const sc=document.querySelector('.scr');if(sc&&keep&&keep.s)sc.scrollTop=keep.s;
+}
+function logout(){S.token='';S.user=null;S.as='';S.set=null;localStorage.removeItem('wwa_token');sessionStorage.removeItem('wwa_as');location.hash='#login';render()}
+const snap=()=>Object.fromEntries([...document.querySelectorAll('#app [id]')].filter(e=>'value' in e).map(e=>[e.id,e.value]));
+async function act(fn){S.err='';S.msg='';const keep=snap();let failed=false;
+  try{await fn()}catch(e){if(e.expired)return logout();S.err=e.message;failed=true}
+  S.busy=false;await render(true,true);
+  if(failed)for(const k in keep){const el=$(k);if(el&&!el.disabled&&el.type!=='password')el.value=keep[k]}}
+const go=h=>{S.err='';S.msg='';if(location.hash==='#'+h)render();else location.hash='#'+h};
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-a]');if(!t||t.disabled)return;
+  const a=t.dataset.a,v=t.dataset.v,i=t.dataset.i;
+  const run=fn=>{t.disabled=true;return act(fn)};
+  switch(a){
+  case 'login':return run(async()=>{const d=await api('/api/login',{method:'POST',body:{email:val('em'),password:val('pw')}});S.token=d.token;S.user=d.user;localStorage.setItem('wwa_token',d.token);go(d.user.role==='admin'?'admin':'home');await render()});
+  case 'tmsg':return run(async()=>{const text=val('t-text');if(!text.trim())throw new Error('Type a message first');await api('/api/test/customer-message',{method:'POST',body:{name:val('t-name'),text}});S.msg='Customer message sent. The AI reply is in the chat below.'});
+  case 'logout':return logout();
+  case 'retry':return render();
+  case 'install':if(S.deferred){S.deferred.prompt();S.deferred=null}return;
+  case 'live':return run(async()=>{await api('/api/live',{method:'POST',body:{enabled:v==='true'}});await render()});
+  case 'cstatus':return run(async()=>{await api('/api/chats/'+i+'/status',{method:'POST',body:{status:v}});await render()});
+  case 'reply':return run(async()=>{const text=val('msg');if(!text.trim())return;const r=await api('/api/chats/'+i+'/reply',{method:'POST',body:{text}});if(!r.delivered)S.err='Saved, but WhatsApp did not deliver it: '+r.error;await render()});
+  case 'bkday':S.bkDay=Number(v);return render(true);
+  case 'bkopen':S.bkOpen=!S.bkOpen;S.form={};return render(true);
+  case 'bkadd':return run(async()=>{const day=addDays(S.today,S.bkDay);S.form={bn:val('bn'),bp:val('bp'),bs:val('bs'),bt:val('bt')};await api('/api/bookings',{method:'POST',body:{name:val('bn'),phone:val('bp'),service:val('bs'),date:day,time:val('bt'),minutes:30}});S.bkOpen=false;S.form={};S.msg='Booking added';await render()});
+  case 'bkcancel':return run(async()=>{await api('/api/bookings/'+i+'/status',{method:'POST',body:{status:'cancelled'}});await render()});
+  case 'sttype':S.st={type:v,res:null};return render(true);
+  case 'stdraft':return run(async()=>{S.busy=true;const ty=S.st.type;let body;
+    if(ty==='review')body={type:'review',review:{name:val('rn'),rating:val('rr'),text:val('rt')}};
+    else if(ty==='post')body={type:'post',topic:val('tp'),kind:'update'};
+    else body={type:'social',goal:val('tp'),format:ty==='igpost'?'post':ty};
+    S.st.res=(await api('/api/studio/draft',{method:'POST',body})).result});
+  case 'stsave':return run(async()=>{const r=S.st.res,ty=S.st.type;await api('/api/creatives',{method:'POST',body:{kind:(ty==='post'||ty==='igpost')?'post':ty,headline:ty==='post'?(r.body||'').slice(0,60):(r.hook||r.caption||'').slice(0,60),caption:ty==='post'?r.body:r.caption,details:r}});S.st.res=null;S.msg='Saved to your content plan';await render()});
+  case 'copyres':try{navigator.clipboard.writeText(S.st.res.reply)}catch(x){}return;
+  case 'crstatus':return run(async()=>{await api('/api/creatives/'+i+'/status',{method:'POST',body:{status:v}})});
+  case 'crdel':return run(async()=>{await api('/api/creatives/'+i,{method:'DELETE'})});
+  case 'gsample':return run(async()=>{S.busy=true;const d=await api('/api/gbp/sample');await api('/api/gbp',{method:'PUT',body:{profile:d.profile,metrics:d.metrics}});await api('/api/gbp/audit',{method:'POST',body:{}});S.g.edit=false});
+  case 'gimport':return run(async()=>{S.busy=true;const txt=val('gj');S.form.gj=txt;let d;try{d=JSON.parse(txt)}catch(x){throw new Error('That is not valid JSON')}await api('/api/gbp',{method:'PUT',body:{profile:d.profile||d,metrics:d.metrics||null}});await api('/api/gbp/audit',{method:'POST',body:{}});S.g.edit=false;S.form.gj=''});
+  case 'gaudit':return run(async()=>{S.busy=true;await api('/api/gbp/audit',{method:'POST',body:{}})});
+  case 'gadvise':return run(async()=>{S.busy=true;await api('/api/gbp/advise',{method:'POST',body:{}})});
+  case 'gedit':S.g.edit=true;return render(true);
+  case 'gcopy':return run(async()=>{const d=await api('/api/gbp');try{await navigator.clipboard.writeText(d.latest.advice.description)}catch(x){}});
+  case 'rule':return run(async()=>{const [k,b]=v.split('|');await api('/api/rules',{method:'PUT',body:{[k]:b==='true'}})});
+  case 'sset':{grab();const [k,x]=v.split('|');S.set[k]=x;return render(true)}
+  case 'slang':{grab();const l=S.set.languages||[];S.set.languages=l.includes(v)?l.filter(z=>z!==v):[...l,v];return render(true)}
+  case 'sday':{grab();const d=S.set.closed_days||[],n=Number(v);S.set.closed_days=d.includes(n)?d.filter(z=>z!==n):[...d,n];return render(true)}
+  case 'ssave':return run(async()=>{grab();const s=S.set;const r=await api('/api/settings',{method:'PUT',body:{name:s.name,city:s.city||'',business_type:s.business_type,tone:s.tone,languages:s.languages,opening_hours:s.opening_hours||'',open_time:s.open_time,close_time:s.close_time,closed_days:s.closed_days,owner_whatsapp:s.owner_whatsapp||''}});S.set=r.settings;S.msg='Saved'});
+  case 'svcadd':return run(async()=>{grab();await api('/api/services',{method:'POST',body:{name:val('v-name'),price:val('v-price'),duration_min:val('v-dur')}})});
+  case 'svcdel':return run(async()=>{grab();await api('/api/services/'+i,{method:'DELETE'})});
+  case 'faqadd':return run(async()=>{grab();await api('/api/faqs',{method:'POST',body:{question:val('f-q'),answer:val('f-a')}})});
+  case 'faqdel':return run(async()=>{grab();await api('/api/faqs/'+i,{method:'DELETE'})});
+  case 'open':S.as=i;S.asName=v;sessionStorage.setItem('wwa_as',i);sessionStorage.setItem('wwa_asname',v);S.set=null;return go('home');
+  case 'back-admin':S.as='';S.set=null;sessionStorage.removeItem('wwa_as');return go('admin');
+  case 'cstat':return run(async()=>{await api('/api/admin/clients/'+i,{method:'PATCH',body:{status:v}})});
+  case 'newclient':return run(async()=>{S.form={nn:val('n-name'),nc:val('n-city'),ne:val('n-email'),nw:val('n-wa'),no:val('n-own')};await api('/api/admin/clients',{method:'POST',body:{name:val('n-name'),city:val('n-city'),business_type:val('n-type'),plan:val('n-plan'),owner_email:val('n-email'),owner_password:val('n-pass'),wa_number_id:val('n-wa'),owner_whatsapp:val('n-own')}});S.form={};S.flash='Client created. They can sign in with that email and password.';location.hash='#admin'});
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const k=e.target.dataset&&e.target.dataset.enter;if(k){const b=document.querySelector('[data-a="'+k+'"]');if(b)b.click()}}});
+window.addEventListener('hashchange',()=>{S.err='';S.msg=S.flash||'';S.flash='';render()});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();S.deferred=e;if(route()[0]==='home')render(true)});
+setInterval(()=>{if(S.token&&!document.hidden&&['home','chats','chat','bookings'].includes(route()[0]))render(true)},8000);
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+render();
+})();
+</script>
+</body>
+</html>

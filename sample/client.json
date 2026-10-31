@@ -1,0 +1,7 @@
+{
+  "name": "Sample Dental Clinic", "business_type": "Clinic", "languages": ["English", "Hindi"], "tone": "Friendly",
+  "timezone": "Asia/Kolkata", "open_time": "10:00", "close_time": "20:00", "opening_hours": "Mon to Sat, 10am to 8pm. Closed Sunday.",
+  "services": [{ "name": "Consultation", "price": 300, "duration_min": 30 }, { "name": "Teeth cleaning", "price": 800, "duration_min": 45 }],
+  "faqs": [{ "q": "Where are you located?", "a": "[address], Thane West" }, { "q": "Do you accept UPI?", "a": "Yes, UPI, cards and cash." }],
+  "rules": { "asks_person": true, "urgent_problem": true, "upset": true }
+}

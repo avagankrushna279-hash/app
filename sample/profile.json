@@ -1,0 +1,34 @@
+{
+  "profile": {
+    "name": "Sample Dental Clinic",
+    "businessType": "Clinic",
+    "city": "Thane",
+    "primaryCategory": "Dentist",
+    "additionalCategories": [],
+    "description": "Dental clinic in Thane. Call us for appointments.",
+    "phone": "+91 90000 00000",
+    "website": "http://sample-dental.example",
+    "bookingLink": "",
+    "hoursSet": true,
+    "holidayHoursSet": false,
+    "photos": { "total": 4, "last30Days": 0, "hasLogo": true, "hasCover": false, "hasTeam": false, "hasInterior": true },
+    "services": [
+      { "name": "Consultation", "description": "" },
+      { "name": "Teeth cleaning", "description": "Professional scaling and polishing to remove plaque and stains." },
+      { "name": "Root canal", "description": "" }
+    ],
+    "attributes": [],
+    "reviews": { "count": 18, "rating": 4.3, "answeredPct": 22, "last30Days": 1, "unansweredNegative": 2 },
+    "posts": { "last30Days": 0, "daysSinceLast": 75 }
+  },
+  "metrics": {
+    "period": "Last 30 days vs the 30 days before",
+    "current":  { "impressions": 2100, "calls": 38, "directions": 52, "websiteClicks": 30, "bookings": 0 },
+    "previous": { "impressions": 2800, "calls": 55, "directions": 64, "websiteClicks": 41, "bookings": 0 }
+  },
+  "reviews": [
+    { "reviewerName": "Anita R.", "rating": 5, "text": "The doctor was gentle and the clinic is very clean. Highly recommend." },
+    { "reviewerName": "Vikram S.", "rating": 1, "text": "Waited over an hour and the front desk staff were rude." },
+    { "reviewerName": "Meera P.", "rating": 4, "text": "Good treatment but parking nearby is difficult." }
+  ]
+}

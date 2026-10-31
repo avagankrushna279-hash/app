@@ -1,0 +1,3 @@
+{ "name": "ai-receptionist", "version": "1.0.0", "private": true, "engines": { "node": ">=18" },
+  "dependencies": { "pg": "^8.11.0" },
+  "scripts": { "start": "node server.js", "migrate": "node cli.js migrate", "test": "node --test test/*.test.js" } }
